@@ -8,7 +8,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   var reactNativeDelegate: ReactNativeDelegate?
-  var reactNativeFactory: RCTReactNativeFactory?
+  @objc dynamic var rootViewFactory: RCTReactNativeFactory?
 
   func application(
     _ application: UIApplication,
@@ -19,11 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     delegate.dependencyProvider = RCTAppDependencyProvider()
 
     reactNativeDelegate = delegate
-    reactNativeFactory = factory
+    rootViewFactory = factory
 
     window = UIWindow(frame: UIScreen.main.bounds)
 
-    factory.startReactNative(
+    rootViewFactory?.startReactNative(
       withModuleName: "CodeMagicSample",
       in: window,
       launchOptions: launchOptions
