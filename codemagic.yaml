@@ -32,6 +32,9 @@ workflows:
               script: |
                 # Lists all simulators currently available along with their UDIDs and states
                 applesimutils --list | cat
+            - name: Boot the simulator
+              script: |
+                xcrun simctl boot "iPhone 14"
             - name: Build the app for Detox (Debug simulator)
               script: |
                 detox build -c ios.sim.debug -l verbose
