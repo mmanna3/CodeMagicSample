@@ -32,6 +32,21 @@ workflows:
               script: |
                 # Lists all simulators currently available along with their UDIDs and states
                 applesimutils --list | cat
+            - name: Create iPhone 14 simulator if it does not exist
+              script: |
+                DEVICE_NAME="iPhone 14"
+                DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-14"
+
+                # Get the latest available iOS runtime (ignoring unavailable ones)
+                IOS_RUNTIME=$(xcrun simctl list runtimes | grep -E "^iOS" | grep -v unavailable | tail -n 1 | awk '{print $NF}' | tr -d '()')
+
+                # Create the simulator only if it doesn't already exist
+                if ! xcrun simctl list devices | grep -q "$DEVICE_NAME ("; then
+                  echo "Creating simulator $DEVICE_NAME with runtime $IOS_RUNTIME"
+                  xcrun simctl create "$DEVICE_NAME" "$DEVICE_TYPE" "$IOS_RUNTIME"
+                else
+                  echo "Simulator $DEVICE_NAME already exists"
+                fi
             - name: Boot the simulator
               script: |
                 xcrun simctl boot "iPhone 14"
