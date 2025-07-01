@@ -1,0 +1,38 @@
+workflows:
+    ios-detox:
+        name: iOS Detox Tests
+        environment:
+            node: v18
+            xcode: latest # Pin to a version (e.g. 15.0) if you want to avoid sudden updates
+            cocoapods: default
+        triggering:
+            events:
+                - push
+            branch_patterns:
+                - pattern: main
+                  include: true
+                  source: true
+        scripts:
+            - name: Install Yarn dependencies
+              script: |
+                yarn install --frozen-lockfile --non-interactive
+            - name: Install Detox dependencies (applesimutils)
+              script: |
+                brew tap wix/brew
+                brew install applesimutils
+            - name: Install detox-cli globally
+              script: |
+                npm install -g detox-cli
+            - name: Install CocoaPods dependencies
+              script: |
+                cd ios && pod install --repo-update
+            - name: Build the app for Detox (Debug simulator)
+              script: |
+                detox build -c ios.sim.debug -l verbose
+            - name: Run Detox tests (Debug simulator)
+              script: |
+                detox test -c ios.sim.debug -l verbose --cleanup
+        artifacts:
+            # Store the built .app bundle and detox log artefacts for debugging, this is optional
+            - ios/build/Build/**/*.app
+            - ~/Library/Detox/Artifacts/**
