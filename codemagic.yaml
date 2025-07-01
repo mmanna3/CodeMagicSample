@@ -53,6 +53,10 @@ workflows:
             - name: Build the app for Detox (Debug simulator)
               script: |
                 detox build -c ios.sim.debug -l verbose
+            - name: Start Metro server
+              script: |
+                # Start Metro in the background so it stays alive for the following Detox tests
+                yarn start --port 8081 --reset-cache &
             - name: Run Detox tests (Debug simulator)
               script: |
                 detox test -c ios.sim.debug -l verbose --cleanup
