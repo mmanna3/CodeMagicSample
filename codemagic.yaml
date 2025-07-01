@@ -19,7 +19,13 @@ workflows:
             - name: Install Detox dependencies (applesimutils)
               script: |
                 brew tap wix/brew
-                brew install applesimutils
+                # Force Homebrew & git to clone via HTTPS (CI has no SSH keys)
+                export HOMEBREW_GIT_PROTOCOL=https
+                git config --global url."https://github.com/".insteadOf "git@github.com:"
+                git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+                # Ensure latest device-type definitions (required for Xcode ≥15)
+                brew uninstall --ignore-dependencies applesimutils || true
+                brew install --HEAD applesimutils
             - name: Install detox-cli globally
               script: |
                 npm install -g detox-cli
@@ -29,6 +35,10 @@ workflows:
             - name: List available simulator device types
               script: |
                 xcrun simctl list devicetypes | cat
+            - name: List available simulators (applesimutils)
+              script: |
+                # Lists all simulators currently available along with their UDIDs and states
+                applesimutils --list | cat
             - name: Build the app for Detox (Debug simulator)
               script: |
                 detox build -c ios.sim.debug -l verbose
