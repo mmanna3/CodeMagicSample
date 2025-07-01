@@ -26,6 +26,9 @@ workflows:
             - name: Install CocoaPods dependencies
               script: |
                 cd ios && pod install --repo-update
+            - name: List available simulator device types
+              script: |
+                xcrun simctl list devicetypes | cat
             - name: Build the app for Detox (Debug simulator)
               script: |
                 detox build -c ios.sim.debug -l verbose
