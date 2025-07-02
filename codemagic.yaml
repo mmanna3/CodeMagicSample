@@ -3,7 +3,7 @@ workflows:
         name: iOS Detox Tests
         environment:
             node: v18
-            xcode: latest # Pin to a version (e.g. 15.0) if you want to avoid sudden updates
+            xcode: latest
             cocoapods: default
         triggering:
             events:
@@ -60,7 +60,31 @@ workflows:
             - name: Run Detox tests (Debug simulator)
               script: |
                 detox test -c ios.sim.debug -l verbose --cleanup
-        artifacts:
-            # Store the built .app bundle and detox log artefacts for debugging, this is optional
+        artifacts:            
             - ios/build/Build/**/*.app
             - ~/Library/Detox/Artifacts/**
+    android-build:
+        name: Android Build
+        environment:
+            node: v18          
+            java: 17           
+        triggering:
+            events:
+                - push
+            branch_patterns:
+                - pattern: main
+                  include: true
+                  source: true
+        scripts:
+            - name: Install Yarn dependencies
+              script: |
+                yarn install --frozen-lockfile --non-interactive
+            - name: Set Android SDK location
+              script: |
+                echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+            - name: Build Android release (APK)
+              script: |
+                cd android
+                ./gradlew assembleRelease --stacktrace --warning-mode all
+        artifacts:
+            - android/app/build/outputs/**/*.apk
