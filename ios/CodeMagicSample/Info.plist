@@ -49,5 +49,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CodePushServerURL</key>
+	<string>https://codepush.pro/api/update</string>
 </dict>
 </plist>
