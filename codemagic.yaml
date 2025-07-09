@@ -5,6 +5,10 @@ workflows:
             node: v18
             xcode: latest
             cocoapods: default
+            vars:
+                # Disable Yarn’s immutable install mode that is automatically enabled when CI=true
+                # This avoids the “YN0028: The lockfile would have been modified by this install” error
+                YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
         triggering:
             events:
                 - push
@@ -15,7 +19,7 @@ workflows:
         scripts:
             - name: Install Yarn dependencies
               script: |
-                yarn install --frozen-lockfile --non-interactive
+                yarn install
             - name: Install Detox dependencies (applesimutils)
               script: |
                 brew tap wix/brew && brew install applesimutils
@@ -68,6 +72,10 @@ workflows:
         environment:
             node: v18          
             java: 17           
+            vars:
+                # Disable Yarn’s immutable install mode that is automatically enabled when CI=true
+                # This avoids the “YN0028: The lockfile would have been modified by this install” error
+                YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
         triggering:
             events:
                 - push
@@ -76,6 +84,11 @@ workflows:
                   include: true
                   source: true
         scripts:
+            - name: Use Yarn classic (v1.22.19)
+              script: |
+                # Ensure Corepack is enabled and pin Yarn to classic v1.22.19 so CI uses the same version as local
+                corepack enable
+                corepack prepare yarn@1.22.19 --activate
             - name: Install Yarn dependencies
               script: |
                 yarn install --frozen-lockfile --non-interactive
