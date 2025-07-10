@@ -9,6 +9,8 @@ workflows:
                 # Disable Yarn’s immutable install mode that is automatically enabled when CI=true
                 # This avoids the “YN0028: The lockfile would have been modified by this install” error
                 YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
+            groups:
+              - codepush-group
         triggering:
             events:
                 - push
@@ -17,6 +19,24 @@ workflows:
                   include: true
                   source: true
         scripts:
+            - name: Install Codemagic CodePush CLI tools
+              script: |
+                  npm install -g @codemagic/code-push-cli
+            - name: CodePush authentication
+              script: |
+                  code-push login "https://codepush.pro" --key $CODEPUSH_TOKEN       
+            - name: CodePush add app # this script can be skipped if you have existing apps
+              script: |
+                  code-push app add CodeMagicSample
+                  code-push app ls
+            - name: Install npm dependencies
+              script: |
+                npm install
+            - name: Codepush deployment
+              script: |
+                  code-push deployment ls CodeMagicSample -k
+                  code-push release-react CodeMagicSample ios -d Staging# -d refers to the deployment name e.g. Production, Staging
+                  code-push release-react CodeMagicSample android -d Staging # -d refers to the deployment name e.g. Production, Staging
             - name: Install Yarn dependencies
               script: |
                 yarn install
