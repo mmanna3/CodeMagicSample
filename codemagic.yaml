@@ -84,14 +84,9 @@ workflows:
                   include: true
                   source: true
         scripts:
-            - name: Use Yarn classic (v1.22.19)
-              script: |
-                # Ensure Corepack is enabled and pin Yarn to classic v1.22.19 so CI uses the same version as local
-                corepack enable
-                corepack prepare yarn@1.22.19 --activate
             - name: Install Yarn dependencies
               script: |
-                yarn install --frozen-lockfile --non-interactive
+                yarn install
             - name: Set Android SDK location
               script: |
                 echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
