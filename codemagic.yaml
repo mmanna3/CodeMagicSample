@@ -24,11 +24,9 @@ workflows:
                   npm install -g @codemagic/code-push-cli
             - name: CodePush authentication
               script: |
-                  echo "CODEPUSH_TOKEN: $CODEPUSH_TOKEN"
                   code-push login "https://codepush.pro" --key $CODEPUSH_TOKEN
-            - name: CodePush add app # this script can be skipped if you have existing apps
+            - name: CodePush list apps
               script: |
-                  code-push app add CodeMagicSample
                   code-push app ls
             - name: Install npm dependencies
               script: |

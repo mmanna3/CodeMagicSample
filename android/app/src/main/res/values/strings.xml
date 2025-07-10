@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CodeMagicSample</string>
      <string moduleConfig="true" name="CodePushServerUrl">https://codepush.pro/</string>
+     <string moduleConfig="true" name="CodePushDeploymentKey">QhOgQnhQZOk_bw9ZWlI8_nzjKSVH686d51b5f28bb5bcb8692357</string>
 </resources>
