@@ -50,7 +50,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>CodePushServerURL</key>
-	<string>https://codepush.pro/api/update</string>
+	<string>https://codepush.pro/</string>
 	<key>CodePushDeploymentKey</key>
 	<string>QhOgQnhQZOk_bw9ZWlI8_nzjKSVH686d51b5f28bb5bcb8692357</string>
 </dict>
